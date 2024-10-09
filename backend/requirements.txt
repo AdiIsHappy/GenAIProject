@@ -1,0 +1,9 @@
+# backend/requirements.txt
+
+fastapi
+uvicorn
+pymongo
+requests
+python-dotenv
+openai
+google-cloud-aiplatform

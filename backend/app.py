@@ -31,7 +31,8 @@ def process_query(request: QueryRequest):
         # Step 1: Breakdown the query into subtasks
         subtasks = task_manager.breakdown_query(request.query)
         # logger.debug(f"Subtasks generated: {json.dumps(subtasks, indent=2)}")
-
+        print(subtasks)
+        return QueryResponse(final_response=json.dumps(subtasks, indent=2))
         # Step 2: Execute each subtask
         results = []
         for subtask in subtasks.get("subtasks", []):

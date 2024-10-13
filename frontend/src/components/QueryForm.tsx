@@ -29,12 +29,15 @@ const QueryForm: React.FC<QueryFormProps> = ({ setResponse }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 mr-8 flex flex-col h-full"
+    >
       <label
         htmlFor="query"
         className="block text-lg font-medium text-gray-700"
       >
-        Enter a complex query:
+        Enter Your Query Here:
       </label>
       <textarea
         id="query"
@@ -42,12 +45,12 @@ const QueryForm: React.FC<QueryFormProps> = ({ setResponse }) => {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Type your query here..."
         required
-        className="w-full p-4 text-lg border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        className="flex-1 w-full p-4 text-lg border-2 border-black rounded-sm shadow-md focus:ring-indigo-500 focus:border-indigo-500"
         rows={5}
       ></textarea>
       <button
         type="submit"
-        className="px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-700"
+        className="px-6 py-2 font-bold  text-black bg-white rounded-sm border-2 border-black shadow hover:bg-gray-300"
         disabled={loading}
       >
         {loading ? "Processing..." : "Submit"}

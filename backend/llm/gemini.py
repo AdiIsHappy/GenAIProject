@@ -1,3 +1,4 @@
+from utils.string_utils import parse_response_to_json
 from .llm import LLM
 import vertexai
 from vertexai.generative_models import GenerativeModel, SafetySetting
@@ -44,13 +45,11 @@ class Gemini(LLM):
 
     def generate_content(self, prompt: str) -> str:
         try:
-            print(f"Raw Prompt {prompt}")
             response = self.model.generate_content(
                 prompt,
                 generation_config=self.generation_config,
                 safety_settings=self.safety_settings,
             )
-            print(f"Raw Response: {response}")
             return response.text  # Use response.text for direct access to the generated text
 
         # except GoogleAPIError as e:
@@ -70,19 +69,17 @@ class Gemini(LLM):
         prompt = self.construct_task_breakdown_prompt(query, history)
         response = self.generate_content(prompt)
         if response:
-            return self.parse_response_to_json(response)
+            return parse_response_to_json(response)
         else:
             return {}
 
-    def get_subtasks_and_tools(self, query: str, history: dict) -> dict:
+    def get_subtasks_and_tools(self, query: str, history: dict, tools: dict) -> dict:
         """Get subtasks and tools needed for the complex query"""
-        print("Query:", query)
-        print("History:", history)
-        prompt = self.construct_subtask_prompt(query, history)
+        prompt = self.construct_subtask_prompt(query, history, tools)
         response = self.generate_content(prompt)
-        print(f'Res: {response}')
         if response:
-            return self.parse_response_to_json(response)
+            response = parse_response_to_json(response)
+            return response if response else {}
         else:
             return {}
 
@@ -91,28 +88,31 @@ class Gemini(LLM):
         prompt = self.construct_execution_prompt(subtask, history)
         response = self.generate_content(prompt)
         if response:
-            return self.parse_response_to_json(response)
+            return parse_response_to_json(response)
         else:
             return {}
 
     def construct_task_breakdown_prompt(self, query: str, history: dict) -> str:
         """Constructs the prompt to break down a complex task"""
         return (
-            "You are an intelligent assistant that can decompose complex tasks into manageable subtasks "
+            "You are an intelligent assistant that can decompose complex tasks into subtasks "
             "and identify the necessary tools to accomplish each subtask.\n\n"
             f"History: {history}\n"
             f"Complex Query: \"{query}\"\n"
-            "Break down the query into subtasks, specifying the tools required for each."
+            "Break down the query into minimum number of necessary subtasks, specifying the tools required for each."
         )
 
-    def construct_subtask_prompt(self, query: str, history: dict) -> str:
+    def construct_subtask_prompt(self, query: str, history: dict, tools: dict) -> str:
         """Constructs the prompt to get subtasks and tools"""
         return (
             "You are an intelligent assistant that can analyze tasks and provide the necessary subtasks "
             "along with tools required to complete each task.\n\n"
             f"History: {history}\n"
             f"Query: \"{query}\"\n"
-            "Break down the query into subtasks, specifying the tools required for each."
+            f"Avaliable Tools: {tools}\n"
+            "Break down the query into minimum number of subtasks, specifying the tools required for each. avoid redundancy in subtasks and tools."
+            "return a JSON formatted list as response. with keys 'subtask' and 'tools' for each subtask."
+            "Example: [{'subtask': 'subtask1', 'tools': ['tool1', 'tool2']}, {'subtask': 'subtask2', 'tools': ['tool3']}]"
         )
 
     def construct_execution_prompt(self, subtask: dict, history: dict) -> str:
@@ -123,12 +123,3 @@ class Gemini(LLM):
             f"Subtask: \"{subtask}\"\n"
             "Execute the subtask using the appropriate tools."
         )
-
-    def parse_response_to_json(self, response: str) -> dict:
-        """Parses the response text into a JSON dictionary"""
-        try:
-            # Assuming the model response is JSON-like or can be parsed as such
-            return eval(response)  # Caution: You may want to use a safer parser like `json.loads`
-        except Exception as e:
-            print(f"Error parsing response to JSON: {e}")
-            return {}

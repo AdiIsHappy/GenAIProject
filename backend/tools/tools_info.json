@@ -1,0 +1,188 @@
+{
+  "database_type": "MongoDB",
+  "tools": [
+    {
+      "tool_name": "get_transactions",
+      "tool_description": "Retrieves transactions based on specified filter criteria.",
+      "arguments": [
+        {
+          "argument_name": "filter_criteria",
+          "argument_description": "A MongoDB filter object specifying criteria for retrieving transactions. Can include fields like 'storeLocation', 'purchaseMethod', or 'saleDate'.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"storeLocation\": \"New York\", \"purchaseMethod\": \"Online\", \"saleDate\": {\"$gte\": \"2023-01-01T00:00:00Z\"}}"
+        }
+      ]
+    },
+    {
+      "tool_name": "post_transaction",
+      "tool_description": "Inserts a new transaction into the database.",
+      "arguments": [
+        {
+          "argument_name": "transaction_data",
+          "argument_description": "A dictionary representing the transaction details. It must include fields like 'saleDate', 'items', 'storeLocation', 'customer', and 'purchaseMethod'.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"saleDate\": \"2023-10-01T14:20:00Z\", \"items\": [{\"name\": \"notebook\", \"tags\": [\"office\", \"writing\"], \"price\": 9.99, \"quantity\": 10}, {\"name\": \"pen\", \"tags\": [\"office\", \"writing\"], \"price\": 1.99, \"quantity\": 100}], \"storeLocation\": \"New York\", \"customer\": {\"gender\": \"M\", \"age\": 30, \"email\": \"test@example.com\", \"satisfaction\": 5}, \"couponUsed\": false, \"purchaseMethod\": \"Online\"}"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_transaction",
+      "tool_description": "Updates an existing transaction in the database by its unique ID.",
+      "arguments": [
+        {
+          "argument_name": "transaction_id",
+          "argument_description": "The unique ObjectId of the transaction to update.",
+          "argument_type": "ObjectId",
+          "required": true,
+          "argument_value_example": "ObjectId('507f191e810c19729de860ea')"
+        },
+        {
+          "argument_name": "update_data",
+          "argument_description": "A dictionary specifying the fields to update and their new values. Uses MongoDB update syntax.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"couponUsed\": true, \"customer.satisfaction\": 4}"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_transaction",
+      "tool_description": "Removes a transaction from the database using its unique ID.",
+      "arguments": [
+        {
+          "argument_name": "transaction_id",
+          "argument_description": "The unique ObjectId of the transaction to delete.",
+          "argument_type": "ObjectId",
+          "required": true,
+          "argument_value_example": "ObjectId('507f191e810c19729de860ea')"
+        }
+      ]
+    },
+    {
+      "tool_name": "sales_summary",
+      "tool_description": "Provides a summarized view of sales data grouped by store location.",
+      "arguments": []
+    },
+    {
+      "tool_name": "revenue_analysis",
+      "tool_description": "Analyzes and returns the total revenue generated, grouped by store location.",
+      "arguments": []
+    },
+    {
+      "tool_name": "get_customers",
+      "tool_description": "Fetches customer data based on specified filter criteria.",
+      "arguments": [
+        {
+          "argument_name": "filter_criteria",
+          "argument_description": "A MongoDB filter object for selecting customers. Can include fields such as 'region', 'age', or 'gender'.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"region\": \"North\", \"age\": {\"$gte\": 18}}"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_customer_info",
+      "tool_description": "Updates the information of a customer based on their email.",
+      "arguments": [
+        {
+          "argument_name": "customer_email",
+          "argument_description": "The email address of the customer whose information is being updated.",
+          "argument_type": "str",
+          "required": true,
+          "argument_value_example": "example@example.com"
+        },
+        {
+          "argument_name": "update_data",
+          "argument_description": "A dictionary containing the updated fields and their values.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"phone\": \"1234567890\", \"satisfaction\": 4}"
+        }
+      ]
+    },
+    {
+      "tool_name": "customer_purchase_history",
+      "tool_description": "Retrieves the complete purchase history of a customer using their email.",
+      "arguments": [
+        {
+          "argument_name": "customer_email",
+          "argument_description": "The email address of the customer whose purchase history is being retrieved.",
+          "argument_type": "str",
+          "required": true,
+          "argument_value_example": "test@example.com"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_items",
+      "tool_description": "Fetches a list of all distinct items sold across transactions.",
+      "arguments": []
+    },
+    {
+      "tool_name": "update_item",
+      "tool_description": "Updates the details of a specific item in the database.",
+      "arguments": [
+        {
+          "argument_name": "item_name",
+          "argument_description": "The name of the item to be updated.",
+          "argument_type": "str",
+          "required": true,
+          "argument_value_example": "notebook"
+        },
+        {
+          "argument_name": "update_data",
+          "argument_description": "A dictionary containing the updated item fields and values.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"price\": 2.99, \"tags\": [\"office\"]}"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_stores",
+      "tool_description": "Lists all unique store locations recorded in the transactions.",
+      "arguments": []
+    },
+    {
+      "tool_name": "store_performance",
+      "tool_description": "Analyzes store performance metrics, including total sales and average customer satisfaction.",
+      "arguments": []
+    },
+    {
+      "tool_name": "apply_coupon",
+      "tool_description": "Applies a given coupon code to a specific transaction.",
+      "arguments": [
+        {
+          "argument_name": "transaction_id",
+          "argument_description": "The unique ObjectId of the transaction to apply the coupon to.",
+          "argument_type": "ObjectId",
+          "required": true,
+          "argument_value_example": "ObjectId('507f191e810c19729de860ea')"
+        },
+        {
+          "argument_name": "coupon_code",
+          "argument_description": "The coupon code to be applied.",
+          "argument_type": "str",
+          "required": true,
+          "argument_value_example": "SAVE10"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_manage_coupons",
+      "tool_description": "Creates and manages available coupons.",
+      "arguments": [
+        {
+          "argument_name": "coupon_data",
+          "argument_description": "A dictionary containing the coupon code and discount value.",
+          "argument_type": "dict",
+          "required": true,
+          "argument_value_example": "{\"code\": \"NEWYEAR\", \"discount\": 0.15}"
+        }
+      ]
+    }
+  ]
+}

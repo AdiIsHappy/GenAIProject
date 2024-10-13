@@ -1,4 +1,6 @@
 from pymongo import MongoClient
+import json
+import os
 
 # Setup and connection to MongoDB
 def get_database():
@@ -6,6 +8,12 @@ def get_database():
     return client['sample_supplies']
 
 db = get_database()
+
+def getToolsInfo():
+    tools_file_path = os.path.join(os.path.abspath('.'),'tools', 'tools_info.json')
+    with open(tools_file_path) as f:
+        tools = f.readlines()
+    return tools
 
 # Transaction APIs
 def get_transactions(filter_criteria={}):
